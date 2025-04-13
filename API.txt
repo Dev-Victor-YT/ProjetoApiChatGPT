@@ -1,0 +1,5 @@
+Enviar pergunta : 
+https://chatgpt-api-9a719-default-rtdb.firebaseio.com/api/chat/per.json
+
+Receber reposta : 
+https://chatgpt-api-9a719-default-rtdb.firebaseio.com/api/chat/res.json

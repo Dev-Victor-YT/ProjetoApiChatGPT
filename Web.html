@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Chat API</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f0f0;
+      padding: 20px;
+    }
+    .container {
+      background: #fff;
+      padding: 20px;
+      max-width: 500px;
+      margin: auto;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    h2 {
+      margin-top: 20px;
+    }
+    .box {
+      background: #f9f9f9;
+      padding: 10px;
+      border-radius: 5px;
+      margin-top: 5px;
+      word-wrap: break-word;
+    }
+    input, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 15px;
+      box-sizing: border-box;
+    }
+    button {
+      background-color: #007BFF;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Pergunta:</h2>
+    <div class="box" id="pergunta">Carregando...</div>
+
+    <h2>Resposta:</h2>
+    <div class="box" id="resposta">Carregando...</div>
+
+    <input type="text" id="novaPergunta" placeholder="Digite nova pergunta">
+    <button onclick="enviarPergunta()">Enviar</button>
+  </div>
+
+  <script>
+    const urlPergunta = 'https://chatgpt-api-9a719-default-rtdb.firebaseio.com/api/chat/per.json';
+    const urlResposta = 'https://chatgpt-api-9a719-default-rtdb.firebaseio.com/api/chat/res.json';
+
+    async function atualizarTela() {
+      try {
+        const [perRes, resRes] = await Promise.all([
+          fetch(urlPergunta).then(r => r.json()),
+          fetch(urlResposta).then(r => r.json())
+        ]);
+        document.getElementById('pergunta').innerText = perRes || 'Sem pergunta';
+        document.getElementById('resposta').innerText = resRes || 'Sem resposta';
+      } catch (e) {
+        document.getElementById('pergunta').innerText = 'Erro ao carregar';
+        document.getElementById('resposta').innerText = 'Erro ao carregar';
+      }
+    }
+
+    async function enviarPergunta() {
+      const nova = document.getElementById('novaPergunta').value.trim();
+      if (!nova) return alert('Digite uma pergunta');
+      try {
+        await fetch(urlPergunta, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(nova)
+        });
+        document.getElementById('novaPergunta').value = '';
+        setTimeout(atualizarTela, 1000); // aguarda salvar
+      } catch (e) {
+        alert('Erro ao enviar pergunta');
+      }
+    }
+
+    // Atualiza a cada 5 segundos
+    atualizarTela();
+    setInterval(atualizarTela, 5000);
+  </script>
+</body>
+</html>

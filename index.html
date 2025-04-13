@@ -63,8 +63,22 @@
           fetch(urlPergunta).then(r => r.json()),
           fetch(urlResposta).then(r => r.json())
         ]);
-        document.getElementById('pergunta').innerText = perRes || 'Sem pergunta';
-        document.getElementById('resposta').innerText = resRes || 'Sem resposta';
+
+        const pergunta = perRes || 'Sem pergunta';
+        const resposta = resRes || '';
+
+        document.getElementById('pergunta').innerText = pergunta;
+        document.getElementById('resposta').innerText = resposta || 'Sem resposta';
+
+        // Se a resposta estiver vazia e houver pergunta, reenviar a pergunta
+        if (!resposta && pergunta && pergunta !== 'Sem pergunta') {
+          await fetch(urlPergunta, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(pergunta)
+          });
+        }
+
       } catch (e) {
         document.getElementById('pergunta').innerText = 'Erro ao carregar';
         document.getElementById('resposta').innerText = 'Erro ao carregar';
@@ -81,13 +95,13 @@
           body: JSON.stringify(nova)
         });
         document.getElementById('novaPergunta').value = '';
-        setTimeout(atualizarTela, 1000); // aguarda salvar
+        document.getElementById('resposta').innerText = 'Aguardando resposta...';
+        setTimeout(atualizarTela, 1000);
       } catch (e) {
         alert('Erro ao enviar pergunta');
       }
     }
 
-    // Atualiza a cada 5 segundos
     atualizarTela();
     setInterval(atualizarTela, 5000);
   </script>

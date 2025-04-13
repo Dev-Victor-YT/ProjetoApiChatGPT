@@ -70,14 +70,16 @@
         document.getElementById('pergunta').innerText = pergunta;
         document.getElementById('resposta').innerText = resposta || 'Sem resposta';
 
-        // Se a resposta estiver vazia e houver pergunta, reenviar a pergunta
-        if (!resposta && pergunta && pergunta !== 'Sem pergunta') {
-          await fetch(urlPergunta, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(pergunta)
-          });
-        }
+        // Aguarda 2 segundos antes de verificar e reenviar a pergunta, se necessário
+        setTimeout(async () => {
+          if (!resposta && pergunta && pergunta !== 'Sem pergunta') {
+            await fetch(urlPergunta, {
+              method: 'PUT',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(pergunta)
+            });
+          }
+        }, 2000);
 
       } catch (e) {
         document.getElementById('pergunta').innerText = 'Erro ao carregar';

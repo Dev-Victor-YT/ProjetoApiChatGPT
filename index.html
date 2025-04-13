@@ -70,7 +70,7 @@
         document.getElementById('pergunta').innerText = pergunta;
         document.getElementById('resposta').innerText = resposta || 'Sem resposta';
 
-        // Aguarda 2 segundos antes de verificar e reenviar a pergunta, se necessário
+        // Aguarda 5 segundos antes de verificar e reenviar a pergunta, se necessário
         setTimeout(async () => {
           if (!resposta && pergunta && pergunta !== 'Sem pergunta') {
             await fetch(urlPergunta, {

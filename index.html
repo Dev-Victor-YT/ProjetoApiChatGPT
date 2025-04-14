@@ -63,24 +63,8 @@
           fetch(urlPergunta).then(r => r.json()),
           fetch(urlResposta).then(r => r.json())
         ]);
-
-        const pergunta = perRes || 'Sem pergunta';
-        const resposta = resRes || '';
-
-        document.getElementById('pergunta').innerText = pergunta;
-        document.getElementById('resposta').innerText = resposta || 'Sem resposta';
-
-        // Aguarda 5 segundos antes de verificar e reenviar a pergunta, se necessário
-        setTimeout(async () => {
-          if (!resposta && pergunta && pergunta !== 'Sem pergunta') {
-            await fetch(urlPergunta, {
-              method: 'PUT',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify(pergunta)
-            });
-          }
-        }, 5000);
-
+        document.getElementById('pergunta').innerText = perRes || 'Sem pergunta';
+        document.getElementById('resposta').innerText = resRes || 'Sem resposta';
       } catch (e) {
         document.getElementById('pergunta').innerText = 'Erro ao carregar';
         document.getElementById('resposta').innerText = 'Erro ao carregar';
@@ -97,13 +81,13 @@
           body: JSON.stringify(nova)
         });
         document.getElementById('novaPergunta').value = '';
-        document.getElementById('resposta').innerText = 'Aguardando resposta...';
-        setTimeout(atualizarTela, 1000);
+        setTimeout(atualizarTela, 1000); // aguarda salvar
       } catch (e) {
         alert('Erro ao enviar pergunta');
       }
     }
 
+    // Atualiza a cada 5 segundos
     atualizarTela();
     setInterval(atualizarTela, 5000);
   </script>
